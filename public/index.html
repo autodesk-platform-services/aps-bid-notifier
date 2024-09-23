@@ -1,0 +1,241 @@
+﻿<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Bid Opportunity</title>
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+  <meta charset="utf-8" />
+  <link rel="shortcut icon" href="https://cdn.autodesk.io/favicon.ico">
+
+  <!-- Common packages: jQuery, Bootstrap, jsTree -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/css/bootstrap.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/js/bootstrap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.22.2/bootstrap-table.min.js"></script>
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/19.2.18/css/intlTelInput.css"
+    integrity="sha512-MqSNU3ahHjuMbcLdeu1dngxB4OaOS7vnnLjnADs9E+0OhS0qk8CZ8nxvA+xyiU+Qy12+0vl2ove9F9ssWZpeuQ=="
+    crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/19.2.19/js/intlTelInput.min.js"
+    integrity="sha512-IxRltlh4EpT/il+hOEpD3g4jlXswVbSyH5vbqw6aF40CUsJTRAnr/7MxmPlKRsv9dYgBPcDSVNrf1P/keoBx+Q=="
+    crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.2.0/socket.io.js"></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/19.2.18/js/utils.js"></script>
+
+  <!-- js tree -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.3.7/themes/default/style.min.css" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.3.7/jstree.min.js"></script>
+
+  <!-- this project files -->
+  <link href="css/main.css" rel="stylesheet" />
+  <script src="js/main.js" type="module"></script>
+
+</head>
+
+<body>
+  <nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <div class="container-fluid">
+      <ul class="nav navbar-nav left col-lg-4">
+        <li>
+          <a href="http://developer.autodesk.com" target="_blank">
+            <img alt="Autodesk APS" src="https://cdn.autodesk.io/logo/black/simple.png" height="20">
+          </a>
+        </li>
+      </ul>
+
+      <ul class="nav navbar-nav right col-lg-2">
+        <li>
+          <button class="btn btn-sm btn-default" id="autodeskSigninButton">Sign In &nbsp&nbsp
+            <img src="https://cdn.autodesk.io/autodesk.png" height="20">
+          </button>
+          <button class="btn btn-sm btn-default" id="autodeskSignOutButton">Sign Out &nbsp&nbsp<span
+              id="userInfo"></span>
+          </button>
+        </li>
+      </ul>
+
+    </div>
+  </nav>
+
+  <div class="container-fluid">
+    <div class="row" style="height: 55vh;overflow-y:auto;">
+      <div id="bidBoard">
+        <h4 class="text-center">Bid Board</h4>
+        <table class="table table-striped table-bordered table-hover" id="oppTable">
+        </table>
+        <div class="progressIssueTable" style="display:none;">
+          <div style="text-align: center;">
+            <img src="./img/Bars-1s-200px.svg" class="clsInProgress">
+          </div>
+        </div>
+      </div>
+    </div>
+    <br>
+    <br>
+    <br>
+    <div class="row">
+      <div class="col-md-3 fill">
+        <div id="webhooks">
+          <h4 class="text-center">Webhooks</h4>
+
+          <div class="form-check">
+            <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
+            <label class="form-check-label" for="flexCheckDefault">
+              bid.created-1.0
+            </label>
+          </div>
+
+          <div class="form-check">
+            <input class="form-check-input" type="checkbox" value="" id="flexCheckChecked" checked>
+            <label class="form-check-label" for="flexCheckChecked">
+              opportunity.comment.created-1.0
+            </label>
+          </div>
+
+          <div class="form-check">
+            <input class="form-check-input" type="checkbox" value="" id="flexCheckChecked">
+            <label class="form-check-label" for="flexCheckChecked">
+              opportunity.comment.deleted-1.0
+            </label>
+          </div>
+
+
+          <div class="form-check">
+            <input class="form-check-input" type="checkbox" value="" id="flexCheckChecked">
+            <label class="form-check-label" for="flexCheckChecked">
+              opportunity.comment.updated-1.0
+            </label>
+          </div>
+
+          <div class="form-check">
+            <input class="form-check-input" type="checkbox" value="" id="flexCheckChecked" checked>
+            <label class="form-check-label" for="flexCheckChecked">
+              opportunity.created-1.0
+            </label>
+          </div>
+
+          <div class="form-check">
+            <input class="form-check-input" type="checkbox" value="" id="flexCheckChecked">
+            <label class="form-check-label" for="flexCheckChecked">
+              opportunity.status.updated-1.0
+            </label>
+          </div>
+
+          <br>
+          <div class="btn-group shadow-0" role="group" id="sms">
+            <button id="btnCreateWebhook" type="button" class="btn btn-success" style="margin-right: 200px;;">Create</button>
+            <button id="btnDeleteWebhook" type="button" class="btn btn-danger">Delete</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-9 fill">
+
+        <div id="subscribers">
+          <h4 class="text-center">Subscribers</h4>
+          <br>
+          <div class="row">
+            <div class="col-md-3">
+
+              <div class="card" id="SMS">
+                <h5 class="card-title" style="text-align: center;background-color:wheat;"><span
+                    class="fa fa-mobile-phone"></span> SMS &nbsp;&nbsp;<img src="img/twilio.png"
+                    style="height: 2rem; width: 6rem;" alt="..."></h5>
+
+                <div class="card-body" style="text-align: center;">
+                  <input type="tel" id="phone">
+                  <p>
+
+                </div>
+              </div>
+
+            </div>
+            <div class="col-md-3">
+              <div class="card">
+                <h5 class="card-title" style="text-align: center; background-color:wheat;"><span
+                    class="fa fa-envelope"></span> Email &nbsp;&nbsp;<img src="img/postmark.png"
+                    style="height: 2rem; width: 6rem;" alt="..."></h5>
+
+                <div class="card-body" style="text-align: center;">
+                  <input type="input" id="email" placeholder="Enter Email">
+                  <p>
+
+                </div>
+
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="card">
+                <h5 class="card-title" style="text-align: center; background-color:wheat;"><span
+                    class="fa fa-file-text"></span> Slack &nbsp;&nbsp;<img src="img/slack.png"
+                    style="height: 2rem; width: 4rem;" alt="..."></h5>
+
+                <div class="card-body" style="text-align: center;">
+                  <input type="input" id="link" placeholder="Enter Channel">
+                  <p>
+
+                </div>
+
+              </div>
+            </div>
+
+            <div class="col-md-3">
+              <div class="card">
+                <h5 class="card-title" style="text-align: center; background-color:wheat;"><span
+                    class="fa fa-external-link "></span> CRM &nbsp;&nbsp;<img src="img/hubspot.png"
+                    style="height: 2rem; width: 4rem;" alt="..."></h5>
+
+                <div class="card-body" style="text-align: center;">
+                  <input type="input" id="crm" placeholder="Enter Sales Table">
+                  <p> 
+                </div> 
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <div id="bcUserId" style="display: none;"></div>
+  <div id="companyId" style="display: none;"></div>
+
+  <div class="modal fade" id="deleteWebhookMsg" role="dialog">
+    <div class="modal-dialog">
+    
+      <!-- Modal content-->
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" onclick="$('#deleteWebhookMsg').modal('hide')">&times;</button>
+        </div>
+        <div class="modal-body">
+          <p><h3>Delete Webhooks Succeeded!</h3></p>
+        </div> 
+      </div>
+      
+    </div>
+  </div>
+
+  <div class="modal fade" id="createWebhookMsg" role="dialog">
+    <div class="modal-dialog">
+    
+      <!-- Modal content-->
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" onclick="$('#createWebhookMsg').modal('hide')">&times;</button>
+        </div>
+        <div class="modal-body">
+          <p><h3>Create Webhooks Succeeded!</h3></p>
+        </div> 
+      </div>
+      
+    </div>
+  </div>
+
+</body>
+
+</html>
